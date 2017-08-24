@@ -5,7 +5,7 @@ import numpy as np
 from mpi4py import MPI
 from trueskill import Rating, rate_1vs1
 
-def master(agents, pick_max_sigma):
+def master(agents, stopping_sigma = 1, pick_max_sigma = False):
     comm = MPI.COMM_WORLD
     myid = comm.Get_rank()
     num_workers = comm.Get_size() - 1
@@ -26,11 +26,11 @@ def master(agents, pick_max_sigma):
     games_played = 0
     while True:
         if pick_max_sigma:
-            if agent_ratings_by_sigma[0][0].sigma < 1:
+            if agent_ratings_by_sigma[0][0].sigma < stopping_sigma:
                 break
         elif games_played % (10 * num_agents) == 0:
             max_sigma = max([agent_ratings[i][0].sigma for i in range(num_agents)])
-            if max_sigma < 1:
+            if max_sigma < stopping_sigma:
                 break
 
         # get the next message (can be from any worker)
