@@ -53,7 +53,7 @@ def master(agents, stopping_sigma = 1, pick_max_sigma = False):
             # as long as the number of agents remains < few hundred
             # The list will be almost sorted, so timsort will be close to one pass
             # The list should also stay in L2.
-            agent_ratings_by_sigma = sorted(agent_ratings_by_sigma, key = lambda val: val[0].sigma, reverse=True)
+            agent_ratings_by_sigma.sort(key = lambda val: val[0].sigma, reverse=True)
             agentid0 = agent_ratings_by_sigma[0][2]
             agentid1 = agent_ratings_by_sigma[random.randint(1, num_agents-1)][2]
         else:
