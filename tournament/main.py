@@ -13,7 +13,8 @@ num_agents = 10 # 500-1200 games
 # is not optimal, but gains can be significant especially as the number
 # of agents increases
 pick_max_sigma = False
-stopping_sigma = 1
+stopping_sigma = 1 # all agent's sigmas must fall below this for us to
+                   # stop the tournament
 
 if __name__ == '__main__':
     comm = MPI.COMM_WORLD
