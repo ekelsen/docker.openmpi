@@ -15,7 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends sudo apt-utils && \
     apt-get install -y --no-install-recommends openssh-server \
-        python-dev python-numpy python-pip python-virtualenv python-scipy \
+        python3-dev python3-numpy python3-pip python3-virtualenv python3-scipy \
         gcc gfortran libopenmpi-dev openmpi-bin openmpi-common openmpi-doc binutils && \
     apt-get clean && apt-get purge && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -52,9 +52,10 @@ ADD ssh/id_rsa.mpi.pub ${SSHDIR}/authorized_keys
 RUN chmod -R 600 ${SSHDIR}* && \
     chown -R ${USER}:${USER} ${SSHDIR}
 
-RUN pip install --upgrade pip \
-    && pip install -U setuptools \
-    && pip install mpi4py
+RUN pip3 install --upgrade pip \
+    && pip3 install -U setuptools \
+    && pip3 install mpi4py \
+    && pip3 install sortedcontainers
 
 # ------------------------------------------------------------
 # Configure OpenMPI
@@ -65,13 +66,14 @@ ADD default-mca-params.conf ${HOME}/.openmpi/mca-params.conf
 RUN chown -R ${USER}:${USER} ${HOME}/.openmpi
 
 # ------------------------------------------------------------
-# Copy MPI4PY example scripts
+# Copy tournament files
 # ------------------------------------------------------------
+RUN pip3 install trueskill
 
 ENV TRIGGER 1
 
-ADD mpi4py_benchmarks ${HOME}/mpi4py_benchmarks
-RUN chown -R ${USER}:${USER} ${HOME}/mpi4py_benchmarks
+ADD tournament ${HOME}/tournament
+RUN chown -R ${USER}:${USER} ${HOME}/tournament
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
