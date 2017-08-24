@@ -19,8 +19,7 @@ def master(agents, stopping_sigma = 1, pick_max_sigma = False):
 
     # give every worker its initial assignment
     for i in range(num_workers):
-        agentid0 = random.randint(0, num_agents-1)
-        agentid1 = random.randint(0, num_agents-1)
+        agentid0, agentid1 = np.random.choice(num_agents, 2, replace=False)
         comm.send((agentid0, agentid1), i + 1)
 
     games_played = 0
