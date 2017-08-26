@@ -11,7 +11,7 @@ def master(agents, stopping_sigma = 1, pick_max_sigma = False):
     num_workers = comm.Get_size() - 1
     num_agents = len(agents)
 
-    agent_ratings = [ [Rating(), agents[i], i] for i in range(num_agents)]
+    agent_ratings = [ [Rating(), i] for i in range(num_agents)]
     agent_ratings_by_sigma = sorted(agent_ratings, key = lambda val: val[0].sigma, reverse=True)
 
     # first we have to broadcast the agents to the workers
@@ -54,8 +54,8 @@ def master(agents, stopping_sigma = 1, pick_max_sigma = False):
             # The list will be almost sorted, so timsort will be close to one pass
             # The list should also stay in L2.
             agent_ratings_by_sigma.sort(key = lambda val: val[0].sigma, reverse=True)
-            agentid0 = agent_ratings_by_sigma[0][2]
-            agentid1 = agent_ratings_by_sigma[random.randint(1, num_agents-1)][2]
+            agentid0 = agent_ratings_by_sigma[0][1]
+            agentid1 = agent_ratings_by_sigma[random.randint(1, num_agents-1)][1]
         else:
             agentid0, agentid1 = np.random.choice(num_agents, 2, replace=False)
 
@@ -69,6 +69,6 @@ def master(agents, stopping_sigma = 1, pick_max_sigma = False):
 
         comm.send(False, send_id)
 
-    print(games_played)
+    print('games played: ', games_played)
     for i in range(num_agents):
         print(agent_ratings[i])
